@@ -292,6 +292,10 @@ namespace IntWarsSharp.Logic.Maps
             if (mo != null)
                 PacketNotifier.notifySpawn(mo);
 
+            var inhi = u as Inhibitor;
+            if (inhi != null)
+                PacketNotifier.notifySpawn(inhi);
+
             var c = o as Champion;
             if (c != null)
             {

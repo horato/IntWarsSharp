@@ -19,13 +19,14 @@ namespace SnifferApp.Logic
         private BinaryWriter writer;
         private BinaryReader reader;
         private Game game;
+        private bool isConnected = false;
 
         private unsafe Sniffer()
         {
-            var listener = new TcpListener(IPAddress.Parse("127.0.0.1"), 5478);
-            listener.Start();
             new Thread(new ThreadStart(() =>
             {
+                var listener = new TcpListener(IPAddress.Parse("127.0.0.1"), 5478);
+                listener.Start();
                 while (true)
                 {
                     var c = listener.AcceptTcpClient();
@@ -74,7 +75,7 @@ namespace SnifferApp.Logic
         {
             try
             {
-                if (writer == null || !writer.BaseStream.CanWrite)
+                if (writer == null || !writer.BaseStream.CanWrite || !isConnected)
                     return;
 
                 writer.Write((int)data.Length);
@@ -87,7 +88,7 @@ namespace SnifferApp.Logic
 
         public SnifferPacket Receive()
         {
-            if (reader == null || !reader.BaseStream.CanRead)
+            if (reader == null || !reader.BaseStream.CanRead || !isConnected)
                 return null;
 
             var packet = new SnifferPacket();

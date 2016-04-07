@@ -243,7 +243,16 @@ namespace IntWarsSharp.Logic.Packets
             if (monster != null)
                 notifyMonsterSpawned(monster);
 
+            var inhi = u as Inhibitor;
+            if (inhi != null)
+                notifyInhibSpawned(inhi);
+
             notifySetHealth(u);
+        }
+        private static void notifyInhibSpawned(Inhibitor m)
+        {
+            var sp = new SpawnMonster(m);
+            PacketHandlerManager.getInstace().broadcastPacket(sp, Channel.CHL_S2C);
         }
 
         private static void notifyMonsterSpawned(Monster m)
